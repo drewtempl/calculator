@@ -1,9 +1,13 @@
 let display = '0';
 let operator = '';
-let operandA = '-1';
-let operandB = '-1';
+let operandA = '';
+let operandB = '';
 let answer = '';
 let prefix = false;
+let decimal = false;
+let operatorFlag = false;
+let error = false;
+let repeat = false;
 const output = document.querySelector('.output');
 
 //Calculator functions
@@ -23,8 +27,11 @@ function multiply(x, y) {
 }
 
 function divide(x, y) {
-    if (y == 0)
+    if (y == 0) {
+        clear()
         output.textContent = "ERROR"
+    }
+        
 
     else {
         answer = x / y
@@ -37,53 +44,60 @@ function mod(x, y) {
     output.textContent = answer;
 }
 
+//converts string to floats, calls corresponding operation
 function operate() {
-    let a = parseInt(operandA);
-    let b = parseInt(operandB);
+    let a = parseFloat(operandA);
+    let b = parseFloat(operandB);
 
     switch (operator) {
         case ('add'):
             add(a, b);
-        break;
+            break;
 
         case ('subtract'):
             subtract(a, b);
-        break;
+            break;
 
         case ('multiply'):
             multiply(a, b);
-        break;
+            break;
 
         case ('divide'):
             divide(a, b);
-        break;
+            break;
 
         case ('mod'):
             mod(a, b);
-        break;
+            break;
     }
 
-    display = answer;
+    if(answer == NaN)
+        display = 0;
+    
+    else
+        display = answer;
 }
 
+//add snumber button function
 const numberBtn = document.querySelectorAll('.number');
-
 for (let i = 0; i < numberBtn.length; i++) {
     numberBtn[i].addEventListener('click', () => {
         display += (numberBtn[i].getAttribute('data-num'))
-        
-        if(prefix) {
+
+        if (prefix) {
             display *= -1
             prefix = false
         }
-            
+        
+        operatorFlag = false;
+        repeat = false;
         displayNum();
     })
 }
 
-
+//displays output
 function displayNum() {
-    if (parseInt(display) == 0)
+    if (parseFloat(display) == 0 && display[1] != '.')
         display = 0;
 
     else if (parseInt(display) > 0 && display[0] == '0')
@@ -92,42 +106,105 @@ function displayNum() {
     output.textContent = display;
 }
 
+//resets output and all variables
 const clearBtn = document.querySelector('.clear')
-clearBtn.addEventListener('click', () => {
+clearBtn.addEventListener('click', clear) 
+
+function clear() {
     display = '0';
     operator = '';
     operandA = '';
     operandB = '';
     answer = '';
+    prefix = false;
+    decimal = false;
+    repeat = false;
     output.textContent = 0;
-})
+}
 
-
+//sets operator, operates if entering a third number
 const operatorBtn = document.querySelectorAll('.operator');
-
 for (let i = 0; i < operatorBtn.length; i++) {
     operatorBtn[i].addEventListener('click', () => {
-        operator = (operatorBtn[i].getAttribute('id'))
-        if (answer)
-            operandA = display;
+        if(operandA) 
+        {
+            if(operandB)
+                operate()
 
-        else
-            operandA = display;
-        display = '0';
+            else {
+                operandB = display;
+            decimal = false;
+            operate();
+            }
+        }
+        
+        operator = (operatorBtn[i].getAttribute('id'))
+        repeat = false;
+        
+        if (!operatorFlag) {
+            if (answer)
+                operandA = display;
+
+            else
+                operandA = display;
+
+            decimal = false;
+            display = '0';
+
+            operatorFlag = true;
+        }
     })
 }
 
+//set operand B, calls operate function
 const equalsBtn = document.querySelector('#equals');
 equalsBtn.addEventListener('click', () => {
-    operandB = display;
+    if(repeat)
+        operandA = display;
+    
+    else
+        operandB = display;
+    
+    decimal = false;
+    repeat = true;
     operate()
 })
 
+//changes negative sign
 const prefixBtn = document.querySelector('#prefix');
 prefixBtn.addEventListener('click', () => {
-    if(display != 0)
+    if (display != 0)
         display *= -1
     else
         prefix = true;
     displayNum()
+})
+
+//adds a decimal
+const decimalBtn = document.querySelector('#decimal')
+decimalBtn.addEventListener('click', () => {
+    if (!decimal) {
+        display += '.'
+        decimal = true;
+    }
+})
+
+//backspace function
+const backspaceBtn = document.querySelector('#backspace')
+backspaceBtn.addEventListener('click', () => {
+    if(display.length == 2 && display[0] == '-') {
+        display = '0';
+        displayNum()
+    }
+        
+    
+    if (display.length > 1) {
+        display = display.slice(0, display.length - 1)
+        displayNum()
+    }
+
+    else {
+        display = '0'
+        displayNum()
+    }
 })
