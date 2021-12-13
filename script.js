@@ -31,7 +31,7 @@ function divide(x, y) {
         clear()
         output.textContent = "ERROR"
     }
-        
+
 
     else {
         answer = x / y
@@ -71,14 +71,14 @@ function operate() {
             break;
     }
 
-    if(answer == NaN)
+    if (answer == NaN)
         display = 0;
-    
+
     else
         display = answer;
 }
 
-//add snumber button function
+//add number button function
 const numberBtn = document.querySelectorAll('.number');
 for (let i = 0; i < numberBtn.length; i++) {
     numberBtn[i].addEventListener('click', () => {
@@ -88,7 +88,7 @@ for (let i = 0; i < numberBtn.length; i++) {
             display *= -1
             prefix = false
         }
-        
+
         operatorFlag = false;
         repeat = false;
         displayNum();
@@ -103,12 +103,15 @@ function displayNum() {
     else if (parseInt(display) > 0 && display[0] == '0')
         display = display.slice(1)
 
+    if (display.length > 20)
+        display = display.slice(0, 20);
+
     output.textContent = display;
 }
 
 //resets output and all variables
 const clearBtn = document.querySelector('.clear')
-clearBtn.addEventListener('click', clear) 
+clearBtn.addEventListener('click', clear)
 
 function clear() {
     display = '0';
@@ -126,21 +129,7 @@ function clear() {
 const operatorBtn = document.querySelectorAll('.operator');
 for (let i = 0; i < operatorBtn.length; i++) {
     operatorBtn[i].addEventListener('click', () => {
-        if(operandA) 
-        {
-            if(operandB)
-                operate()
 
-            else {
-                operandB = display;
-            decimal = false;
-            operate();
-            }
-        }
-        
-        operator = (operatorBtn[i].getAttribute('id'))
-        repeat = false;
-        
         if (!operatorFlag) {
             if (answer)
                 operandA = display;
@@ -153,18 +142,32 @@ for (let i = 0; i < operatorBtn.length; i++) {
 
             operatorFlag = true;
         }
+
+        if (operandA && !operatorFlag) {
+            if (operandB)
+                operate()
+
+            else {
+                operandB = display;
+                decimal = false;
+                operate();
+            }
+        }
+
+        operator = (operatorBtn[i].getAttribute('id'))
+        repeat = false;
     })
 }
 
 //set operand B, calls operate function
 const equalsBtn = document.querySelector('#equals');
 equalsBtn.addEventListener('click', () => {
-    if(repeat)
+    if (repeat)
         operandA = display;
-    
+
     else
         operandB = display;
-    
+
     decimal = false;
     repeat = true;
     operate()
@@ -192,12 +195,12 @@ decimalBtn.addEventListener('click', () => {
 //backspace function
 const backspaceBtn = document.querySelector('#backspace')
 backspaceBtn.addEventListener('click', () => {
-    if(display.length == 2 && display[0] == '-') {
+    if (display.length == 2 && display[0] == '-') {
         display = '0';
         displayNum()
     }
-        
-    
+
+
     if (display.length > 1) {
         display = display.slice(0, display.length - 1)
         displayNum()

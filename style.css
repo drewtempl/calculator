@@ -1,29 +1,50 @@
 .container {
     height: 600px;
-    width: 500px;
+    max-width: 500px;
+    margin: 100px auto;
     border: 3px solid black;
-    background: grey;
-    padding: 20px;
+    background: rgb(93, 93, 231);
+    padding: 30px 20px;
+    border-radius: 12px;
+    font-size: 36px;
+    font-family: monospace;
 }
 
+body {
+    background: rgb(252, 138, 56);
+}
 .output {
     border: 2px solid black;
     text-align: right;
     padding: 5px 10px;
-    font-size: 30px;
-    font-family: monospace;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
+    background: rgb(175, 175, 175);
+    overflow: hidden;
 }
 
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    border: 2px solid black;
+    grid-gap: 5px;
     height: 70%;
 }
 
 button {
-    font-size: 24px;
-    
+    font-size: 32px;
+    background: rgb(255, 242, 127); 
+    border: none;  
+    border-radius: 30px;
+}
+
+button:active {
+    background: rgb(146, 137, 60); 
+}
+
+.number {
+    background: rgb(255, 145, 0);
+}
+
+.number:active {
+    background: rgb(143, 81, 0);
 }
