@@ -125,7 +125,7 @@ function clear() {
     output.textContent = 0;
 }
 
-//sets operator, operates if entering a third number
+//sets operator, operates if entering a third number, overrides operator if new one is entered
 const operatorBtn = document.querySelectorAll('.operator');
 for (let i = 0; i < operatorBtn.length; i++) {
     operatorBtn[i].addEventListener('click', () => {
